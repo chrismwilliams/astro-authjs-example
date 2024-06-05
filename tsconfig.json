@@ -1,0 +1,12 @@
+{
+  "extends": "astro/tsconfigs/strictest",
+  "compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@/components/*": ["src/components/*"],
+			"@/lib/*": ["src/lib/*"],
+			"@/layouts/*": ["src/layouts/*"]
+		}
+	},
+	"exclude": ["node_modules", "**/node_modules/**", ".vscode", "dist"]
+}

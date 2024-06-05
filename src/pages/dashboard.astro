@@ -1,0 +1,35 @@
+---
+import { db, Session, User } from "astro:db";
+import Layout from "@/layouts/Layout.astro";
+
+if (!Astro.locals.user) {
+	return Astro.redirect("/");
+}
+
+const {
+	user: { username },
+} = Astro.locals;
+
+const sessions = await db.select().from(Session);
+const users = await db.select().from(User);
+
+console.table(sessions);
+console.table(users);
+---
+
+<Layout title="Dashboard">
+	<section class="flex w-full flex-col items-center gap-2 px-4 py-24">
+		<h1 class="text-center text-2xl font-bold sm:text-4xl">Dashboard</h1>
+		<p class="max-w-prose text-xl font-semibold text-indigo-600 dark:text-indigo-400">
+			Username: {username}
+		</p>
+		<p class="mb-2 max-w-prose text-lg dark:text-zinc-100">
+			This is a protected page. You can only see this if you are logged in.
+		</p>
+		<a
+			href="/api/auth/signout"
+			class="mb-10 rounded-md bg-zinc-900 px-3 py-1 text-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
+			>Sign out</a
+		>
+	</section>
+</Layout>
