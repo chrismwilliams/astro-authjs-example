@@ -16,6 +16,8 @@ export default defineConfig({
 				password: {},
 			},
 			authorize: async (credentials) => {
+				if (!credentials.email || !credentials.password) return null;
+
 				const user = (await db.select().from(User).where(eq(User.email, credentials.email)))[0];
 
 				if (!user) {
@@ -38,4 +40,40 @@ export default defineConfig({
 			},
 		}),
 	],
+	callbacks: {
+		jwt: ({ token, user }) => {
+			return {
+				...token,
+				...user,
+			};
+		},
+		session: ({ session, token }) => {
+			session.user = {
+				id: token.id,
+				type: token.type,
+				...token.attributes,
+			};
+
+			session.tokens = {
+				role: token.attributes.role,
+				iat: token.iat,
+				exp: token.exp,
+				jti: token.jti,
+				sub: token.sub,
+				at: token.accessToken,
+				rt: token.refreshToken,
+			};
+
+			return {
+				...session,
+			};
+		},
+	},
+	pages: {
+		// error: "/500"
+	},
+	session: {
+		strategy: "jwt",
+	},
+	trustHost: true,
 });
