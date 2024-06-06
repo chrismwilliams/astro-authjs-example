@@ -3,16 +3,13 @@ import tailwind from "@astrojs/tailwind";
 import db from "@astrojs/db";
 import node from "@astrojs/node";
 
+import auth from "auth-astro";
+
 // https://astro.build/config
 export default defineConfig({
-	integrations: [tailwind(), db()],
+	integrations: [tailwind(), db(), auth()],
 	security: {
 		checkOrigin: true,
-	},
-	vite: {
-		optimizeDeps: {
-			exclude: ["astro:db"],
-		},
 	},
 	output: "server",
 	adapter: node({
